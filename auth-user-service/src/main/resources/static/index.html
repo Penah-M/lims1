@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>LIMS Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="login-page" class="page active">
+    <div class="login-container">
+        <h2>LIMS Admin Panel</h2>
+        <p class="login-subtitle">Hesaba daxil olun</p>
+
+        <form id="login-form">
+            <input type="text" id="login-username" placeholder="İstifadəçi adı" required>
+            <input type="password" id="login-password" placeholder="Şifrə" required>
+            <button type="submit" class="btn-primary">Daxil ol</button>
+
+            <div id="login-error" class="error hidden"></div>
+        </form>
+    </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page" class="page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-title">LIMS</div>
+
+        <ul class="menu">
+            <li class="menu-item" data-section="profile">Profil</li>
+            <li class="menu-item admin-only" data-section="users">İstifadəçilər</li>
+            <li class="menu-item superadmin-only" data-section="roles">Rollar</li>
+        </ul>
+
+        <button id="logout-btn" class="logout-btn">Çıxış</button>
+    </aside>
+
+    <!-- CONTENT AREA -->
+    <main class="content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-title">LIMS Dashboard</div>
+            <div class="topbar-user" id="topbar-username"></div>
+        </header>
+
+        <!-- SECTIONS -->
+        <section id="profile-section" class="section active">
+            <h2>Profil</h2>
+            <p><strong>İstifadəçi adı:</strong> <span id="p-username"></span></p>
+            <p><strong>Email:</strong> <span id="p-email"></span></p>
+            <p><strong>Rollar:</strong> <span id="p-roles"></span></p>
+        </section>
+
+        <section id="users-section" class="section">
+            <h2>İstifadəçilər</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>İstifadəçi adı</th>
+                    <th>Email</th>
+                    <th>Rollar</th>
+                </tr>
+                </thead>
+                <tbody id="users-table"></tbody>
+            </table>
+        </section>
+
+        <section id="roles-section" class="section">
+            <h2>Rollar</h2>
+
+            <form id="create-role-form" class="form-inline">
+                <input type="text" id="new-role-name" placeholder="Rol adı" required>
+                <input type="text" id="new-role-desc" placeholder="Açıqlama" required>
+                <button class="btn-primary small">Əlavə et</button>
+            </form>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Rol</th>
+                    <th>Açıqlama</th>
+                </tr>
+                </thead>
+                <tbody id="roles-table"></tbody>
+            </table>
+        </section>
+    </main>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

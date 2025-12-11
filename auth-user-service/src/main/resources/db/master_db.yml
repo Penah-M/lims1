@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/master_db/01_users.yml
+  - include:
+      file: db/master_db/02_roles.yml
+  - include:
+      file: db/master_db/03_user_roles.yml
+  - include:
+      file: db/master_db/04_permission.yml
+  - include:
+      file: db/master_db/05_user_permission.yml

@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-order-tests
+      author: penah
+      changes:
+        - createTable:
+            tableName: order_tests
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: test_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit
+                  type: VARCHAR(50)
+              - column:
+                  name: reference_range
+                  type: VARCHAR(100)
+              - column:
+                  name: price
+                  type: DECIMAL(10,2)
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: 'PENDING'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: result
+                  type: VARCHAR(255)
+              - addForeignKeyConstraint:
+                  baseTableName: order_tests
+                  baseColumnNames: order_id
+                  referencedTableName: orders
+                  referencedColumnNames: id
+                  constraintName: fk_order_tests_order
+                  onDelete: CASCADE
+
+
+

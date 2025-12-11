@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="az">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Patient Admin — Test Client</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --primary:#2563eb;
+            --muted:#6b7280;
+            --card:#ffffff;
+            --bg:#f4f7fb;
+        }
+        body{background:var(--bg);font-family:Inter,system-ui,Arial,sans-serif}
+        .sidebar{min-width:250px;max-width:300px;background:white;height:110vh;padding:18px;border-right:1px solid rgba(0,0,0,0.06)}
+        .brand{font-weight:700;color:var(--primary);font-size:20px}
+        .menu-item{cursor:pointer;padding:10px;border-radius:8px;margin-bottom:6px}
+        .menu-item:hover{background:rgba(37,99,235,0.06)}
+        .menu-item.active{background:linear-gradient(90deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03));border-left:3px solid var(--primary);padding-left:7px}
+        .subform{display:none;margin-top:10px}
+        .card-panel{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(15,23,42,0.04)}
+        pre#response{background:#0b1220;color:#e6f0ff;padding:12px;border-radius:8px;height:300px;overflow:auto}
+        .logbox{height:160px;overflow:auto;background:#fff;padding:10px;border-radius:8px;border:1px solid #eee}
+        .field-label{font-size:13px;color:#333;margin-bottom:6px}
+        .muted{color:var(--muted);font-size:13px}
+        .topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.04)}
+        .small-btn{padding:6px 10px;font-size:13px}
+        .resp-table th, .resp-table td{vertical-align:middle}
+        @media (max-width: 900px){
+            .sidebar{display:none}
+            .mobile-show{display:block}
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand mb-3">Patient Admin</div>
+        <div class="muted mb-2">BASE_URL</div>
+        <input id="baseUrl" class="form-control mb-3" value="http://localhost:8081/api/v1/patient" />
+        <div class="muted mb-2">Endpoints</div>
+
+        <div id="menu">
+            <div class="menu-item" data-key="create">📥 Create Patient</div>
+            <div class="menu-item" data-key="update">✏️ Update Patient</div>
+            <div class="menu-item" data-key="getAll">📋 Get All Patients</div>
+            <div class="menu-item" data-key="findById">🔎 Find By ID</div>
+            <div class="menu-item" data-key="findByFin">🆔 Find By FIN</div>
+            <div class="menu-item" data-key="searchByName">🔤 Search By Name</div>
+            <div class="menu-item" data-key="searchByLastName">🔤 Search By LastName</div>
+            <div class="menu-item" data-key="searchNameAndLastName">🔎 Search Name+LastName</div>
+            <div class="menu-item" data-key="searchByDate">📅 Search By Update Date</div>
+            <div class="menu-item" data-key="findGender">⚧ Find By Gender</div>
+            <div class="menu-item" data-key="softDelete">🗑️ Soft Delete</div>
+            <div class="menu-item" data-key="hardDelete">❌ Hard Delete</div>
+        </div>
+
+        <!--        <hr>-->
+        <!--        <div class="muted">Notes</div>-->
+        <!--        <div class="muted small">1) Make sure backend CORS enabled if served separately.</div>-->
+        <!--        <div class="muted small">2) Change BASE_URL if your server uses different port.</div>-->
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-grow-1 p-4">
+        <div class="topbar mb-3 card-panel">
+            <div>
+                <h4 style="margin:0">Patient API Test Client</h4>
+                <div class="muted">Sidebar → select an action. Results shown below.</div>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary small-btn me-2" onclick="clearResponse()">Clear</button>
+                <button class="btn btn-outline-secondary small-btn" onclick="downloadResponse()">Download JSON</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-7">
+                <!-- DYNAMIC FORMS -->
+                <div id="forms" class="card-panel">
+
+                    <!-- CREATE -->
+                    <div id="form-create" class="subform">
+                        <h5>Create Patient</h5>
+                        <div class="mb-2 muted">Fill all required fields and press Create.</div>
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="field-label">First Name *</label>
+                                <input id="create_firstName" class="form-control" placeholder="Kamal">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="field-label">Last Name *</label>
+                                <input id="create_lastName" class="form-control" placeholder="Huseynov">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="field-label">Father Name *</label>
+                                <input id="create_fatherName" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="field-label">Gender *</label>
+                                <select id="create_gender" class="form-select">
+                                    <option value="">-- select --</option>
+                                    <option>MALE</option>
+                                    <option>FEMALE</option>
+                                    <option>OTHER</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="field-label">Birthday *</label>
+                                <input id="create_birthday" class="form-control" type="date">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="field-label">Phone</label>
+                                <input id="create_phone" class="form-control" placeholder="+994...">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="field-label">Document Number (FIN) *</label>
+                                <input id="create_documentNumber" class="form-control" placeholder="AA1234567">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-primary" onclick="createPatient()">Create</button>
+                        </div>
+                    </div>
+
+                    <!-- UPDATE -->
+                    <div id="form-update" class="subform">
+                        <h5>Update Patient</h5>
+                        <div class="muted mb-2">Provide ID and new fields (all required fields must be present for validation).</div>
+                        <div class="row g-2">
+                            <div class="col-md-4"><label class="field-label">ID *</label><input id="update_id" class="form-control" type="number"></div>
+                            <div class="col-md-4"><label class="field-label">First Name *</label><input id="update_firstName" class="form-control"></div>
+                            <div class="col-md-4"><label class="field-label">Last Name *</label><input id="update_lastName" class="form-control"></div>
+                            <div class="col-md-4"><label class="field-label">Father Name *</label><input id="update_fatherName" class="form-control"></div>
+                            <div class="col-md-4"><label class="field-label">Gender *</label>
+                                <select id="update_gender" class="form-select">
+                                    <option value="">-- select --</option><option>MALE</option><option>FEMALE</option><option>OTHER</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4"><label class="field-label">Birthday *</label><input id="update_birthday" class="form-control" type="date"></div>
+                            <div class="col-md-6"><label class="field-label">Phone</label><input id="update_phone" class="form-control"></div>
+                            <div class="col-md-6"><label class="field-label">Document Number *</label><input id="update_documentNumber" class="form-control"></div>
+                        </div>
+                        <div class="mt-3"><button class="btn btn-primary" onclick="updatePatient()">Update</button></div>
+                    </div>
+
+                    <!-- GET ALL -->
+                    <div id="form-getAll" class="subform">
+                        <h5>Get All Patients</h5>
+                        <div class="muted mb-2">Click to fetch all patients (GET).</div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary" onclick="getAll()">Get All</button>
+                            <button class="btn btn-outline-secondary" onclick="getAllTable()">Get All (As Table)</button>
+                        </div>
+                    </div>
+
+                    <!-- FIND BY ID -->
+                    <div id="form-findById" class="subform">
+                        <h5>Find By ID</h5>
+                        <div class="row g-2">
+                            <div class="col-md-4"><input id="find_id" class="form-control" type="number" placeholder="id"></div>
+                            <div class="col-md-4"><button class="btn btn-primary" onclick="findById()">Find</button></div>
+                        </div>
+                    </div>
+
+                    <!-- FIND BY FIN -->
+                    <div id="form-findByFin" class="subform">
+                        <h5>Find By FIN</h5>
+                        <div class="row g-2">
+                            <div class="col-md-6"><input id="find_fin" class="form-control" placeholder="AA1234567"></div>
+                            <div class="col-md-6"><button class="btn btn-primary" onclick="findByFin()">Find</button></div>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH BY NAME -->
+                    <div id="form-searchByName" class="subform">
+                        <h5>Search By Name</h5>
+                        <div class="row g-2">
+                            <div class="col-md-6"><input id="search_name" class="form-control" placeholder="Ad"></div>
+                            <div class="col-md-6"><button class="btn btn-primary" onclick="searchByName()">Search</button></div>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH BY LASTNAME -->
+                    <div id="form-searchByLastName" class="subform">
+                        <h5>Search By LastName</h5>
+                        <div class="row g-2">
+                            <div class="col-md-6"><input id="search_lastName" class="form-control" placeholder="Soyad"></div>
+                            <div class="col-md-6"><button class="btn btn-primary" onclick="searchByLastName()">Search</button></div>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH NAME + LASTNAME -->
+                    <div id="form-searchNameAndLastName" class="subform">
+                        <h5>Search Name + LastName</h5>
+                        <div class="row g-2">
+                            <div class="col-md-5"><input id="search_name2" class="form-control" placeholder="First name"></div>
+                            <div class="col-md-5"><input id="search_lastName2" class="form-control" placeholder="Last name"></div>
+                            <div class="col-md-2"><button class="btn btn-primary" onclick="searchNameAndLastName()">Search</button></div>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH BY DATE -->
+                    <div id="form-searchByDate" class="subform">
+                        <h5>Search By Update Date</h5>
+                        <div class="row g-2">
+                            <div class="col-md-4"><input id="search_date" class="form-control" type="date"></div>
+                            <div class="col-md-4"><button class="btn btn-primary" onclick="searchByDate()">Search</button></div>
+                        </div>
+                    </div>
+
+                    <!-- FIND GENDER -->
+                    <div id="form-findGender" class="subform">
+                        <h5>Find By Gender</h5>
+                        <div class="d-flex gap-2">
+                            <select id="find_gender" class="form-select w-25"><option value="">--select--</option><option>MALE</option><option>FEMALE</option><option>OTHER</option></select>
+                            <button class="btn btn-primary" onclick="findGender()">Find</button>
+                        </div>
+                    </div>
+
+                    <!-- SOFT DELETE -->
+                    <div id="form-softDelete" class="subform">
+                        <h5>Soft Delete</h5>
+                        <div class="row g-2">
+                            <div class="col-md-3"><input id="soft_id" class="form-control" type="number" placeholder="id"></div>
+                            <div class="col-md-3"><button class="btn btn-warning" onclick="softDelete()">Soft Delete</button></div>
+                        </div>
+                    </div>
+
+                    <!-- HARD DELETE -->
+                    <div id="form-hardDelete" class="subform">
+                        <h5>Hard Delete</h5>
+                        <div class="row g-2">
+                            <div class="col-md-3"><input id="hard_id" class="form-control" type="number" placeholder="id"></div>
+                            <div class="col-md-3"><button class="btn btn-danger" onclick="hardDelete()">Hard Delete</button></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT: RESPONSE -->
+            <div class="col-5">
+                <div class="card-panel mb-3">
+                    <h6 style="margin:0">Response</h6>
+                    <div class="muted">Serverdən gələn cavab JSON formatında aşağıda göstərilir.</div>
+                    <pre id="response">No request yet.</pre>
+                </div>
+
+                <div class="card-panel">
+                    <h6 style="margin:0">Console / Log</h6>
+                    <div class="logbox mt-2" id="log">Client started...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- table view container (for getAll table) -->
+        <div id="tableContainer" class="mt-4" style="display:none">
+            <div class="card-panel">
+                <h5>Patients (Table)</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover resp-table">
+                        <thead class="table-light">
+                        <tr>
+                            <th>ID</th><th>First</th><th>Last</th><th>Father</th><th>Gender</th><th>Birthday</th><th>Phone</th><th>FIN</th><th>Status</th><th>Updated At</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Bootstrap JS + Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    /* ====================
+       Helper & UI wiring
+       ==================== */
+
+    function el(id){return document.getElementById(id)}
+    function base(){ return el('baseUrl').value.replace(/\/+$/,'') }
+
+    function log(msg){
+        const l = el('log');
+        const time = new Date().toLocaleTimeString();
+        l.innerText = `[${time}] ${msg}\n` + l.innerText;
+    }
+
+    /* Menu interactions */
+    const menuItems = document.querySelectorAll('#menu .menu-item');
+    menuItems.forEach(it=>{
+        it.addEventListener('click', ()=> {
+            menuItems.forEach(x=>x.classList.remove('active'));
+            it.classList.add('active');
+            showForm(it.dataset.key);
+        });
+    });
+
+    /* Show corresponding form */
+    function showForm(key){
+        // hide all
+        document.querySelectorAll('.subform').forEach(s=>s.style.display='none');
+        document.getElementById('tableContainer').style.display = 'none';
+        // show requested
+        const elForm = document.getElementById('form-' + key);
+        if(elForm) elForm.style.display = 'block';
+        // scroll to top of forms
+        window.scrollTo({top:100, behavior:'smooth'});
+    }
+
+    /* Response / download */
+    let lastResponse = null;
+    function showResponse(obj){
+        lastResponse = obj;
+        el('response').innerText = JSON.stringify(obj, null, 2);
+    }
+    function clearResponse(){ el('response').innerText = ''; el('tableContainer').style.display='none'; }
+    function downloadResponse(){
+        if(!lastResponse) return alert('No response yet');
+        const blob = new Blob([JSON.stringify(lastResponse, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'response.json'; a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    /* Generic fetch wrapper */
+    async function apiFetch(path, opts = {}){
+        const url = base() + path;
+        log(`REQ ${opts.method||'GET'} ${url}`);
+        try{
+            const res = await fetch(url, opts);
+            const text = await res.text();
+            let body;
+            try { body = text ? JSON.parse(text) : null; } catch(e) { body = text; }
+            const result = {status: res.status, body};
+            if(!res.ok){
+                showResponse(result);
+                log(`ERR ${res.status}`);
+                throw new Error('HTTP ' + res.status + ' - ' + (body && body.message ? body.message : JSON.stringify(body)));
+            }
+            showResponse(result.body ?? result);
+            log(`OK ${res.status}`);
+            return result.body ?? result;
+        } catch(err){
+            log('Fetch error: ' + (err.message || err));
+            throw err;
+        }
+    }
+
+    /* ====================
+       API ACTIONS
+       ==================== */
+
+    /* Create */
+    async function createPatient(){
+        const payload = {
+            firstName: el('create_firstName').value.trim(),
+            lastName: el('create_lastName').value.trim(),
+            fatherName: el('create_fatherName').value.trim(),
+            gender: el('create_gender').value || null,
+            birthday: el('create_birthday').value || null,
+            phone: el('create_phone').value.trim() || null,
+            documentNumber: el('create_documentNumber').value.trim()
+        };
+        try{
+            await apiFetch('/create', {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify(payload)
+            });
+        }catch(e){}
+    }
+
+    /* Update */
+    async function updatePatient(){
+        const id = el('update_id').value;
+        if(!id) return alert('ID daxil edin');
+        const payload = {
+            firstName: el('update_firstName').value.trim(),
+            lastName: el('update_lastName').value.trim(),
+            fatherName: el('update_fatherName').value.trim(),
+            gender: el('update_gender').value || null,
+            birthday: el('update_birthday').value || null,
+            phone: el('update_phone').value.trim() || null,
+            documentNumber: el('update_documentNumber').value.trim()
+        };
+        try{
+            await apiFetch(`/${id}/update`, {
+                method:'PUT',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify(payload)
+            });
+        }catch(e){}
+    }
+
+    /* Get all (raw JSON) */
+    async function getAll(){
+        try{
+            const res = await apiFetch('/all');
+            // res is array or object
+            // show as-is (already in response)
+            // hide table
+            el('tableContainer').style.display='none';
+        }catch(e){}
+    }
+
+    /* Get all as table view */
+    async function getAllTable(){
+        try{
+            let arr = await apiFetch('/all');
+            if(!Array.isArray(arr)){
+                // if wrapped e.g. {status:..., body: [...]}
+                if(arr && arr.body && Array.isArray(arr.body)) arr = arr.body;
+            }
+            if(!Array.isArray(arr)){
+                showResponse(arr);
+                return;
+            }
+            // fill table
+            const tbody = el('tableBody');
+            tbody.innerHTML = '';
+            arr.forEach(p=>{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+        <td>${p.id ?? ''}</td>
+        <td>${p.firstName ?? ''}</td>
+        <td>${p.lastName ?? ''}</td>
+        <td>${p.fatherName ?? ''}</td>
+        <td>${p.gender ?? ''}</td>
+        <td>${p.birthday ?? ''}</td>
+        <td>${p.phone ?? ''}</td>
+        <td>${p.documentNumber ?? ''}</td>
+        <td>${p.status ?? ''}</td>
+        <td>${p.updateAt ?? p.updatedAt ?? ''}</td>
+      `;
+                tbody.appendChild(tr);
+            });
+            el('tableContainer').style.display='block';
+        }catch(e){}
+    }
+
+    /* Find by ID */
+    async function findById(){
+        const id = el('find_id').value;
+        if(!id) return alert('ID daxil edin');
+        try{ await apiFetch(`/${id}/findById`); }catch(e){}
+    }
+
+    /* Find by FIN (note controller path findFIn) */
+    async function findByFin(){
+        const fin = el('find_fin').value.trim();
+        if(!fin) return alert('FIN daxil edin');
+        try{ await apiFetch(`/${encodeURIComponent(fin)}/findFIn`); }catch(e){}
+    }
+
+    /* Search by name */
+    async function searchByName(){
+        const name = el('search_name').value.trim();
+        if(!name) return alert('Name daxil edin');
+        try{ await apiFetch(`/${encodeURIComponent(name)}/searchByName`); }catch(e){}
+    }
+
+    /* Search by lastName */
+    async function searchByLastName(){
+        const lastName = el('search_lastName').value.trim();
+        if(!lastName) return alert('LastName daxil edin');
+        try{ await apiFetch(`/${encodeURIComponent(lastName)}/searchByLastName`); }catch(e){}
+    }
+
+    /* Search name + lastName */
+    async function searchNameAndLastName(){
+        const name = el('search_name2').value.trim();
+        const lastName = el('search_lastName2').value.trim();
+        if(!name || !lastName) return alert('Name ve LastName daxil edin');
+        try{ await apiFetch(`/${encodeURIComponent(name)}/${encodeURIComponent(lastName)}/searchNameAndLastName`); }catch(e){}
+    }
+
+    /* Search by update date (ISO format) */
+    async function searchByDate(){
+        const date = el('search_date').value;
+        if(!date) return alert('Tarix secin');
+        try{ await apiFetch(`/${date}/search`); }catch(e){}
+    }
+
+    /* Find by gender */
+    async function findGender(){
+        const g = el('find_gender').value;
+        if(!g) return alert('Gender secin');
+        try{ await apiFetch(`/${encodeURIComponent(g)}/findGender`); }catch(e){}
+    }
+
+    /* Soft delete */
+    async function softDelete(){
+        const id = el('soft_id').value;
+        if(!id) return alert('ID daxil edin');
+        try{ await apiFetch(`/${id}/softDelete`); }catch(e){}
+    }
+
+    /* Hard delete */
+    async function hardDelete(){
+        const id = el('hard_id').value;
+        if(!id) return alert('ID daxil edin');
+        try{ await apiFetch(`/${id}/hardDelete`); }catch(e){}
+    }
+
+    /* Init: show Create by default */
+    document.addEventListener('DOMContentLoaded', ()=> {
+        // activate first item
+        const first = document.querySelector('#menu .menu-item');
+        if(first){ first.classList.add('active'); showForm(first.dataset.key); }
+        log('Client ready. BASE_URL=' + base());
+    });
+</script>
+</body>
+</html>

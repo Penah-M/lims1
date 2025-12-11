@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-test-categories
+      author: penah
+      changes:
+        - createTable:
+            tableName: test_categories
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(50)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: 'DRAFT'
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: update_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+#        - addForeignKeyConstraint:
+#            baseTableName: test_categories
+#            baseColumnNames: parent_id
+#            referencedTableName: test_categories
+#            referencedColumnNames: id
+#            constraintName: fk_test_categories_parent
+#            onDelete: SET NULL

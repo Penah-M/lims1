@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    background: #f5f7fb;
+    font-family: Arial, sans-serif;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* LOGIN */
+.login-container {
+    width: 330px;
+    margin: 120px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: #1e88e5;
+    border: none;
+    color: white;
+    border-radius: 8px;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+/* DASHBOARD LAYOUT */
+#dashboard-page {
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    background: white;
+    border-right: 1px solid #ddd;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item {
+    padding: 12px;
+    background: #e8f1ff;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: #d5e7ff;
+}
+
+.logout-btn {
+    margin-top: 40px;
+    width: 100%;
+    padding: 10px;
+    background: #e53935;
+    border: none;
+    color: white;
+    border-radius: 8px;
+}
+
+/* MAIN CONTENT */
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* TOPBAR */
+.topbar {
+    height: 55px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+/* INLINE FORM */
+.form-inline {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.small {
+    padding: 8px 12px !important;
+}

@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: penah
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: update_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 2.1
+      author: penah
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: SUPER_ADMIN
+              - column:
+                  name: description
+                  value: "Sistemin bütün imkanlarına tam giriş imkanı olan istifadəçi (ən yüksək səlahiyyət)."
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ADMIN
+              - column:
+                  name: description
+                  value: "AMəhdud idarəetmə səlahiyyətlərinə malik administrator. (Super Admin-dən daha az 
+                  hüquqları var.)"
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: DOCTOR
+              - column:
+                  name: description
+                  value: "Həkim rolu."
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: LAB_MANAGER
+              - column:
+                  name: description
+                  value: "Laboratoriya texniki rolu"
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: RECEPTION
+              - column:
+                  name: description
+                  value: "Pasiyentlərin qeydiyyatı və qəbul işləri ilə məşğul olan əməkdaş"

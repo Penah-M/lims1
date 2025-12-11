@@ -1,0 +1,8 @@
+rootProject.name = 'lims'
+
+include 'common'
+include  'patient-service'
+include 'test-analysis'
+include 'auth-user-service'
+include 'order-ms'
+

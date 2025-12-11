@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-reference-ranges
+      author: penah
+      changes:
+        - createTable:
+            tableName: reference_ranges
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+
+              - column:
+                  name: test_definition_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: min_value
+                  type: DECIMAL(10,2)
+
+              - column:
+                  name: max_value
+                  type: DECIMAL(10,2)
+
+              - column:
+                  name: gender
+                  type: VARCHAR(20)
+
+              - column:
+                  name: age_min
+                  type: INT
+
+              - column:
+                  name: age_max
+                  type: INT
+
+              - column:
+                  name: pregnancy_status
+                  type: VARCHAR(50)
+
+              - column:
+                  name: unit
+                  type: VARCHAR(50)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: update_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+
+        - addForeignKeyConstraint:
+            baseTableName: reference_ranges
+            baseColumnNames: test_definition_id
+            referencedTableName: test_definitions
+            referencedColumnNames: id
+            constraintName: fk_reference_ranges_test
+            onDelete: CASCADE

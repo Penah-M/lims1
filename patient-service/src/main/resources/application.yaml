@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+
+  application:
+    name: patient-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/patient_db
+    username: postgres
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: db/changelog/master_db.yml
+#    drop-first: true
+
+
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+#
+
+

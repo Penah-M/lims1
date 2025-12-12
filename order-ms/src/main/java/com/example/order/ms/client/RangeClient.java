@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "test-analysis",
+        contextId = "rangeClient",
         url = "localhost:8083/api/v1/range"
 )
 public interface RangeClient {

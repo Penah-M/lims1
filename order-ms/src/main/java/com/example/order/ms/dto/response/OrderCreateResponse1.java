@@ -1,12 +1,10 @@
-package com.example.order.ms.dto.request;
+package com.example.order.ms.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -15,15 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-
-public class OrderCreateRequest {
-     Long patientId;
-//     Long doctorId;
-     String note;
-
-
-     boolean generateBilling;
-     boolean generateLaboratory;
-
-     List<OrderTestRequest> tests;
+public class OrderCreateResponse1 {
+    BillingResponse billingResponse;
+    LaboratoryResponse laboratoryResponse;
 }

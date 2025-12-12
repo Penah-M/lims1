@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
@@ -28,7 +30,7 @@ public class UpdateDefinitionRequest {
     Unit unit;
     SampleType sampleType;
     Integer turnaroundTime;
-    Double price;
+    BigDecimal price;
     Long categoryId;
     TestStatus status;
 }

@@ -27,8 +27,12 @@ databaseChangeLog:
                   name: unit
                   type: VARCHAR(50)
               - column:
-                  name: reference_range
-                  type: VARCHAR(100)
+                  name: min_value
+                  type: DECIMAL(10,2)
+
+              - column:
+                  name: max_value
+                  type: DECIMAL(10,2)
               - column:
                   name: price
                   type: DECIMAL(10,2)

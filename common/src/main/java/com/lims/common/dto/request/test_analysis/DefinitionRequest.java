@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
@@ -44,7 +46,7 @@ public class DefinitionRequest {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be positive")
-    Double price;
+    BigDecimal price;
 
     @NotNull(message = "Category ID is required")
     Long categoryId;

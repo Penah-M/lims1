@@ -1,5 +1,6 @@
 package com.example.order.ms.dto.response;
 
+import com.example.order.ms.enums.OrderStatus;
 import com.lims.common.dto.response.patient.PatientResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -17,14 +18,11 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class OrderCreateResponse {
-
-     Long orderId;
-     String orderNumber;
-     String status;
-     BigDecimal totalPrice;
-     String createdAt;
-
-     PatientResponse patient;
-     List<OrderItemResponse> items;
+public class LaboratoryResponse {
+    Long orderId;
+    String orderNumber;
+    OrderStatus status;
+    LocalDateTime createdAt;
+    PatientResponse patient;
+    List<OrderItemResponse> items;
 }

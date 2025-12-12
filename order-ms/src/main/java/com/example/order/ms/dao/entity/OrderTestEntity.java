@@ -1,6 +1,6 @@
 package com.example.order.ms.dao.entity;
 
-import com.example.order.ms.enums.Unit;
+import com.lims.common.enums.Unit;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,25 +33,28 @@ public class OrderTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     Long id;
+    Long id;
 
-     Long testId; // Test MS-dən gələn ID
+    Long testId; // Test MS-dən gələn ID
 
-     Unit unit;
+    Unit unit;
 
-     String referenceRange;
+     double minValue;
+     double maxValue;
 
-     BigDecimal price = BigDecimal.ZERO;
+    //     BigDecimal price = BigDecimal.ZERO;
+    BigDecimal price;
 
-     String status = "PENDING";
+    String status = "PENDING";
 
-     String result;
+    String result;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-     OrderEntity order;
+    OrderEntity order;
 
-    @OneToMany(mappedBy = "orderTest", cascade = CascadeType.ALL, orphanRemoval = true)
-     List<OrderTestDetailEntity> orderTestDetails;
+    @OneToMany(mappedBy = "orderTestEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderTestDetailEntity> orderTestDetails;
+
 
 }

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -28,7 +29,7 @@ public class DefinitionResponse {
     Unit unit;
     SampleType sampleType;
     Integer turnaroundTime;
-    Double price;
+    BigDecimal price;
     Long categoryId;
     TestStatus status;
     String categoryName;

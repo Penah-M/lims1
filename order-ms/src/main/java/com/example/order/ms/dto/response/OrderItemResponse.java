@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
@@ -22,9 +24,12 @@ public class OrderItemResponse {
      Long testId;
      String testName;
      Unit unit;
-     Double price;
+     BigDecimal price;
 
      String referenceRange;
+
+     double maxValue;
+     double minValue;
 
      SampleType sampleType;
 

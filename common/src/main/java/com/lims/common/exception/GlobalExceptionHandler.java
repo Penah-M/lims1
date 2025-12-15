@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AnalysisCategoryNotFoundException.class)
-    public ResponseEntity<?> handleCategoryNotFound(AnalysisCategoryNotFoundException ex,
+    public ResponseEntity<?> handleAnalysisCategoryNotFound(AnalysisCategoryNotFoundException ex,
                                                     HttpServletRequest request){
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DefinitionNotFoundException.class)
-    public ResponseEntity<?> handleCategoryNotFound(DefinitionNotFoundException ex,
+    public ResponseEntity<?> handleDefinitionCategoryNotFound(DefinitionNotFoundException ex,
                                                     HttpServletRequest request){
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)

@@ -1,7 +1,8 @@
 package com.example.order.ms.dto.response;
 
+
 import com.example.order.ms.enums.OrderStatus;
-import com.lims.common.dto.response.patient.PatientResponse;
+import com.example.order.ms.enums.OrderTestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +19,14 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class LaboratoryResponse {
-    Long orderId;
-    String orderNumber;
-    OrderStatus status;
-    LocalDateTime createdAt;
-    PatientResponse patient;
-    List<OrderItemResponse> items;
+public class LabOrderResponse {
+
+      Long orderId;
+      String orderNumber;
+      LocalDateTime createdAt;
+      OrderStatus status;
+
+      PatientSnapshotResponse patient;
+
+      List<LabTestResponse> tests;
 }

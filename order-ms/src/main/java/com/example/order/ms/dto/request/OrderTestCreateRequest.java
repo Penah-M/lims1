@@ -13,9 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class OrderItemResultRequest {
-     Long orderItemId;
-     String value;
-     String unit;
-     String comment;
+public class OrderTestCreateRequest {
+
+     private Long testDefinitionId;
 }

@@ -1,5 +1,6 @@
 package com.example.order.ms.dto.request;
 
+import com.lims.common.enums.PregnancyStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +18,12 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 
 public class OrderCreateRequest {
-     Long patientId;
-//     Long doctorId;
-     String note;
 
+      Long patientId;
 
-     boolean generateBilling;
-     boolean generateLaboratory;
+      PregnancyStatus pregnancyStatus;
 
-     List<OrderTestRequest> tests;
+      List<OrderTestCreateRequest> tests;
+
+      String notes;
 }

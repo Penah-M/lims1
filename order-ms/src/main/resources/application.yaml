@@ -19,6 +19,17 @@ spring:
     drop-first: true
 
 
+redis:
+  server:
+    url: redis://localhost:6379
+
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+
+
 
 
 

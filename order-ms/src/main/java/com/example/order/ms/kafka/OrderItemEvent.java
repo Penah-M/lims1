@@ -1,6 +1,7 @@
 package com.example.order.ms.kafka;
 
-import com.example.order.ms.enums.SampleType;
+
+import com.lims.common.enums.SampleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

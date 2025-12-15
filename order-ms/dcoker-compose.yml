@@ -7,12 +7,12 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
-#  redis:
-#    image: redis:latest
-#    container_name: my-redis-r
-#    ports:
-#      - "6379:6379"
-#    restart: always
+  redis:
+    image: redis:latest
+    container_name: my-redis-r-order
+    ports:
+      - "6379:6379"
+    restart: always
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     depends_on:

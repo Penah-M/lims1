@@ -1,6 +1,7 @@
 package com.example.order.ms.dao.entity;
 
 import com.example.order.ms.enums.OrderStatus;
+import com.lims.common.enums.Gender;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +21,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,25 +35,47 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
+
+
 public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Long id;
 
-     Long patientId; // Patient MS-dən gələn ID
+    @Column(name = "order_number", nullable = false, unique = true, length = 40)
+     String orderNumber;
+
+    @Column(name = "patient_id", nullable = false)
+     Long patientId;
+
+    // Patient snapshot
+    @Column(name = "patient_full_name", nullable = false, length = 200)
+     String patientFullName;
+
+    @Column(name = "patient_gender", nullable = false, length = 20)
+    Gender patientGender;
+
+    @Column(name = "patient_birth_date", nullable = false)
+     LocalDate patientBirthDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+     OrderStatus status;
+
+    @Column(name = "total_price", nullable = false, precision = 12, scale = 2)
+     BigDecimal totalPrice;
+
+    @Column(name = "created_by", nullable = false)
+     Long createdBy;
 
     @CreationTimestamp
-     LocalDateTime createdAt ;
-
-     @Enumerated(EnumType.STRING)
-     OrderStatus status ;
-
-     BigDecimal totalPrice = BigDecimal.ZERO;
+    @Column(name = "created_at", nullable = false)
+     LocalDateTime createdAt;
 
     @Column(columnDefinition = "TEXT")
      String notes;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-     List<OrderTestEntity> orderTestEntities;
+     List<OrderTestEntity> tests;
 }

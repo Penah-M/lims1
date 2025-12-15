@@ -13,19 +13,31 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: order_id
                   type: BIGINT
                   constraints:
                     nullable: false
+
               - column:
-                  name: test_id
+                  name: test_definition_id
                   type: BIGINT
                   constraints:
                     nullable: false
+
+              - column:
+                  name: test_code
+                  type: VARCHAR(50)
+
+              - column:
+                  name: test_name
+                  type: VARCHAR(255)
+
               - column:
                   name: unit
                   type: VARCHAR(50)
+
               - column:
                   name: min_value
                   type: DECIMAL(10,2)
@@ -33,28 +45,36 @@ databaseChangeLog:
               - column:
                   name: max_value
                   type: DECIMAL(10,2)
+
               - column:
                   name: price
                   type: DECIMAL(10,2)
-                  defaultValue: 0.0
+                  defaultValue: 0.00
                   constraints:
                     nullable: false
+
               - column:
                   name: status
                   type: VARCHAR(50)
                   defaultValue: 'PENDING'
                   constraints:
                     nullable: false
+
               - column:
                   name: result
                   type: VARCHAR(255)
-              - addForeignKeyConstraint:
-                  baseTableName: order_tests
-                  baseColumnNames: order_id
-                  referencedTableName: orders
-                  referencedColumnNames: id
-                  constraintName: fk_order_tests_order
-                  onDelete: CASCADE
 
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
 
-
+        - addForeignKeyConstraint:
+            baseTableName: order_tests
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_order_tests_order
+            onDelete: CASCADE

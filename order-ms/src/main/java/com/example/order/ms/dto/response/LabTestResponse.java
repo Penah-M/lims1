@@ -1,7 +1,6 @@
 package com.example.order.ms.dto.response;
 
-import com.example.order.ms.enums.OrderItemStatus;
-import com.lims.common.enums.SampleType;
+import com.example.order.ms.enums.OrderTestStatus;
 import com.lims.common.enums.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,20 +17,18 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class OrderItemResponse {
-     Long orderItemId;
+public class LabTestResponse {
 
-     Long testId;
+     Long orderTestId;
+
      String testName;
      Unit unit;
-     BigDecimal price;
 
-     String referenceRange;
+     BigDecimal minValue;
+     BigDecimal maxValue;
 
-     double maxValue;
-     double minValue;
+     OrderTestStatus status;
 
-     SampleType sampleType;
-
-     OrderItemStatus status;
+    // TEMP – Result MS gelene kimi
+     String result;
 }

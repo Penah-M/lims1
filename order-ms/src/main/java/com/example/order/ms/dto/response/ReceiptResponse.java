@@ -19,12 +19,16 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class BillingResponse {
-    Long orderId;
-    String orderNumber;
-    OrderStatus status;
-    BigDecimal totalPrice;
-    LocalDateTime createdAt;
-    PatientResponse patient;
-    List<OrderItemResponse> items;
+public class ReceiptResponse {
+
+     Long orderId;
+     String orderNumber;
+     LocalDateTime createdAt;
+     OrderStatus status;
+
+     String patientFullName;
+
+     List<ReceiptItemResponse> items;
+
+     BigDecimal totalPrice;
 }

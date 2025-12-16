@@ -26,4 +26,7 @@ public class OrderCreateResponse {
      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
      LocalDateTime createdAt;
      BigDecimal totalPrice;
+     BigDecimal discountPercent;
+     BigDecimal discountAmount;
+     BigDecimal finalPrice;
 }

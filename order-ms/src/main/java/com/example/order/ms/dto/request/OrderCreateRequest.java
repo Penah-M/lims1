@@ -26,8 +26,8 @@ public class OrderCreateRequest {
 
       List<OrderTestCreateRequest> tests;
 
-      BigDecimal discountPercent;   // optional
-      BigDecimal discountAmount;    // optional
+      BigDecimal discountPercent;
+      BigDecimal discountAmount;
       String discountReason;
 
 

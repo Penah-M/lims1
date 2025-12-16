@@ -49,4 +49,9 @@ public class OrderReceptionController {
         orderService.cancelOrder(orderId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{orderId}")
+    public void deleteOrder(@PathVariable Long orderId){
+        orderService.deleteOrder(orderId);
+    }
 }

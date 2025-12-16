@@ -29,7 +29,10 @@ public class OrderMapper {
                 .orderNumber(order.getOrderNumber())
                 .status(order.getStatus())
                 .createdAt(order.getCreatedAt())
+                .discountAmount(order.getDiscountAmount())
+                .discountPercent(order.getDiscountPercent())
                 .totalPrice(order.getTotalPrice())
+                .finalPrice(order.getFinalPrice())
                 .build();
     }
 
@@ -56,6 +59,9 @@ public class OrderMapper {
                 .status(order.getStatus())
                 .patientFullName(order.getPatientFullName())
                 .items(items)
+                .discountAmount(order.getDiscountAmount())
+                .discountPercent(order.getDiscountPercent())
+                .finalPrice(order.getFinalPrice())
                 .totalPrice(order.getTotalPrice())
                 .build();
     }

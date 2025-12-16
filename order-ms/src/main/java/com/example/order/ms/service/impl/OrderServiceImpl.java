@@ -47,21 +47,21 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = PRIVATE,makeFinal = true)
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 public class OrderServiceImpl implements OrderService {
 
-      OrderRepository orderRepository;
-      OrderTestRepository orderTestRepository;
+    OrderRepository orderRepository;
+    OrderTestRepository orderTestRepository;
 
-      PatientClient patientClient;
+    PatientClient patientClient;
     DefinitionClient definitionClient;
-     RangeClient rangeClient;
+    RangeClient rangeClient;
 
     OrderMapper orderMapper;
-     OrderTestMapper orderTestMapper;
-     PatientSnapshotMapper patientSnapshotMapper;
+    OrderTestMapper orderTestMapper;
+    PatientSnapshotMapper patientSnapshotMapper;
 
-     CacheUtil cacheUtil;
+    CacheUtil cacheUtil;
 
     private static final String RECEIPT_KEY = "order:receipt:";
     private static final String LAB_KEY = "order:lab:";
@@ -152,11 +152,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toCreateResponse(order);
     }
 
-
-
-    /* =========================
-       RECEIPT (REDIS)
-       ========================= */
     @Override
     public ReceiptResponse getReceipt(Long orderId) {
 
@@ -203,10 +198,8 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderAlreadyCanceledException("Tamamlanmis order legv edile bilmez");
         }
 
-        // Order status
         order.setStatus(OrderStatus.CANCELLED);
 
-        // Order test-lər
         if (order.getTests() != null) {
             for (OrderTestEntity test : order.getTests()) {
                 test.setStatus(OrderTestStatus.CANCELED);
@@ -215,7 +208,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(order);
 
-        // Redis invalidate
         cacheUtil.evict(RECEIPT_KEY + orderId);
         cacheUtil.evict(LAB_KEY + orderId);
 
@@ -229,7 +221,9 @@ public class OrderServiceImpl implements OrderService {
 
     /* =========================
        LAB VIEW (REDIS)
-       ========================= */}
+       ========================= */
+    }
+
     @Override
     public LabOrderResponse getLabOrder(Long orderId) {
 
@@ -296,12 +290,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-        public void deleteOrder(Long orderId) {
+    public void deleteOrder(Long orderId) {
 
-            OrderEntity order = orderRepository.findById(orderId)
-                    .orElseThrow(() ->
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
                         new OrderNotFoundException("Order tapilmadi"));
-
         orderRepository.delete(order);
 
         cacheUtil.evict("order:receipt:" + orderId);

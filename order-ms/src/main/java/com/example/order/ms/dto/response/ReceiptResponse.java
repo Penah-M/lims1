@@ -21,15 +21,22 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 public class ReceiptResponse {
 
-     Long orderId;
-     String orderNumber;
-     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-     LocalDateTime createdAt;
-     OrderStatus status;
+    Long orderId;
+    String orderNumber;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    LocalDateTime createdAt;
+    OrderStatus status;
 
-     String patientFullName;
+    String patientFullName;
 
-     List<ReceiptItemResponse> items;
+    List<ReceiptItemResponse> items;
 
-     BigDecimal totalPrice;
+    BigDecimal totalPrice;
+    BigDecimal discountAmount;
+
+    BigDecimal discountPercent;
+
+    BigDecimal finalPrice;
+
+
 }

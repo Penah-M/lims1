@@ -23,4 +23,5 @@ public interface OrderService {
     LabOrderResponse getLabOrder(Long orderId);
 
     void updateTestResult(Long orderTestId, LabResultUpdateRequest request);
+    void deleteOrder(Long orderId);
 }

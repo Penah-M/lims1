@@ -23,6 +23,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -54,6 +55,7 @@ public class OrderEntity {
      String patientFullName;
 
     @Column(name = "patient_gender", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
     Gender patientGender;
 
     @Column(name = "patient_birth_date", nullable = false)
@@ -64,7 +66,20 @@ public class OrderEntity {
      OrderStatus status;
 
     @Column(name = "total_price", nullable = false, precision = 12, scale = 2)
-     BigDecimal totalPrice;
+    BigDecimal totalPrice;
+
+
+    @Column(name = "discount_amount")
+    private BigDecimal discountAmount;
+
+    @Column(name = "discount_percent")
+    private BigDecimal discountPercent;
+
+    @Column(name = "discount_reason")
+    private String discountReason;
+
+    @Column(name = "final_price", nullable = false)
+    private BigDecimal finalPrice;
 
     @Column(name = "created_by", nullable = false)
      Long createdBy;
@@ -77,5 +92,9 @@ public class OrderEntity {
      String notes;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-     List<OrderTestEntity> tests;
+     List<OrderTestEntity> tests =new ArrayList<>();
+    public void addTest(OrderTestEntity test) {
+        tests.add(test);
+        test.setOrder(this);
+    }
 }

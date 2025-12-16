@@ -32,7 +32,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Data
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class OrderTestEntity {
+public class OrderTestEntity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -16,13 +15,12 @@ public class CacheUtil {
 
     public <T> T get(String key) {
         RBucket<T> bucket = redissonClient.getBucket(key);
-        return bucket != null ? bucket.get() : null;
+        return bucket.get();
     }
 
-    public <T> void put(String key, T value, long time, TemporalUnit unit) {
+    public <T> void put(String key, T value, Duration ttl) {
         RBucket<T> bucket = redissonClient.getBucket(key);
-        bucket.set(value);
-        bucket.expire(Duration.of(time, unit));
+        bucket.set(value, ttl);
     }
 
     public void evict(String key) {

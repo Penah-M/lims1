@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -24,6 +25,11 @@ public class OrderCreateRequest {
       PregnancyStatus pregnancyStatus;
 
       List<OrderTestCreateRequest> tests;
+
+      BigDecimal discountPercent;   // optional
+      BigDecimal discountAmount;    // optional
+      String discountReason;
+
 
       String notes;
 }

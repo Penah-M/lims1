@@ -26,6 +26,7 @@ import com.example.order.ms.util.CacheUtil;
 import com.lims.common.dto.response.patient.PatientResponse;
 import com.lims.common.dto.response.test_analysis.DefinitionResponse;
 import com.lims.common.dto.response.test_analysis.RangeResponse;
+import com.lims.common.exception.BusinessException;
 import com.lims.common.exception.DefinitionNotFoundException;
 import com.lims.common.exception.PatientNotFoundException;
 import com.lims.common.exception.RangeNotFoundException;
@@ -36,9 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -68,33 +70,38 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderCreateResponse createOrder(OrderCreateRequest request) {
-
-        log.info("Yeni order yaradilir, patientId={}", request.getPatientId());
+        validateDiscount(request);
 
         PatientResponse patient = patientClient.findById(request.getPatientId());
         if (patient == null) {
-            log.warn("Patient tapilmadi, id={}", request.getPatientId());
             throw new PatientNotFoundException("Patient tapilmadi");
         }
 
         OrderEntity order = new OrderEntity();
         order.setOrderNumber(generateOrderNumber());
         order.setStatus(OrderStatus.CREATED);
-        order.setTotalPrice(BigDecimal.ZERO);
         order.setNotes(request.getNotes());
         order.setCreatedBy(5L);
 
+        // ❗ MÜTLƏQ başlanğıc dəyər
+        order.setTotalPrice(BigDecimal.ZERO);
+        order.setFinalPrice(BigDecimal.ZERO);
+
+        order.setDiscountAmount(request.getDiscountAmount());
+        order.setDiscountPercent(request.getDiscountPercent());
+        order.setDiscountReason(request.getDiscountReason());
+
         patientSnapshotMapper.mapPatientSnapshot(order, patient);
-        orderRepository.save(order);
 
         int age = Period.between(patient.getBirthday(), LocalDate.now()).getYears();
         BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (OrderTestCreateRequest testReq : request.getTests()) {
 
-            DefinitionResponse definition = definitionClient.findId(testReq.getTestDefinitionId());
+            DefinitionResponse definition =
+                    definitionClient.findId(testReq.getTestDefinitionId());
+
             if (definition == null) {
-                log.warn("Definition tapilmadi, id={}", testReq.getTestDefinitionId());
                 throw new DefinitionNotFoundException("Test definition tapilmadi");
             }
 
@@ -106,29 +113,46 @@ public class OrderServiceImpl implements OrderService {
             );
 
             if (range == null) {
-                log.warn("Range tapilmadi, definitionId={}", definition.getId());
-                throw new RangeNotFoundException("Bu patient ucun uygun range tapilmadi");
+                throw new RangeNotFoundException("Uygun range tapilmadi");
             }
 
-            OrderTestEntity orderTest =
-                    orderTestMapper.toEntity(definition, range);
+            OrderTestEntity test = orderTestMapper.toEntity(definition, range);
+            test.setOrder(order);
 
-            orderTest.setOrder(order);
-            orderTestRepository.save(orderTest);
+            order.getTests().add(test);
 
-            totalPrice = totalPrice.add(orderTest.getPrice());
+            totalPrice = totalPrice.add(test.getPrice());
         }
 
+        // 🧮 TOTAL
         order.setTotalPrice(totalPrice);
+
+        // 🎯 ENDIRIM
+        BigDecimal finalPrice = totalPrice;
+
+        if (order.getDiscountAmount() != null) {
+            finalPrice = finalPrice.subtract(order.getDiscountAmount());
+        }
+
+        if (order.getDiscountPercent() != null) {
+            BigDecimal percentDiscount =
+                    totalPrice
+                            .multiply(order.getDiscountPercent())
+                            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+            finalPrice = finalPrice.subtract(percentDiscount);
+        }
+
+        order.setFinalPrice(finalPrice.max(BigDecimal.ZERO));
+
+
+        // ✅ YALNIZ İNDİ SAVE
         orderRepository.save(order);
-
-        log.info("Order yaradildi, orderId={}, totalPrice={}",
-                order.getId(), order.getTotalPrice());
-
-        // TODO [AUDIT-MS]: OrderCreatedEvent publish olunacaq
 
         return orderMapper.toCreateResponse(order);
     }
+
+
 
     /* =========================
        RECEIPT (REDIS)
@@ -136,25 +160,29 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ReceiptResponse getReceipt(Long orderId) {
 
-        String key = RECEIPT_KEY + orderId;
+        String cacheKey = RECEIPT_KEY + orderId;
 
-        ReceiptResponse cached = cacheUtil.get(key);
+        // 1️⃣ Cache yoxla
+        ReceiptResponse cached = cacheUtil.get(cacheKey);
         if (cached != null) {
-            log.info("Receipt redis-den oxundu, orderId={}", orderId);
             return cached;
         }
 
-        log.info("Receipt DB-den oxunur, orderId={}", orderId);
-
+        // 2️⃣ DB-dən oxu
         OrderEntity order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Order tapilmadi"));
+                .orElseThrow(() ->
+                        new OrderNotFoundException("Order tapilmadi: " + orderId)
+                );
 
+        // 3️⃣ Response map et
         ReceiptResponse response = orderMapper.toReceiptResponse(order);
-        cacheUtil.put(key, response, 15, ChronoUnit.MINUTES);
 
-        log.info("Receipt redis-e elave olundu, orderId={}", orderId);
+        // 4️⃣ Cache-ə yaz (TTL = 15 dəqiqə)
+        cacheUtil.put(cacheKey, response, Duration.ofMinutes(15));
+
         return response;
     }
+
 
     @Override
     @Transactional
@@ -205,9 +233,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public LabOrderResponse getLabOrder(Long orderId) {
 
-        String key = LAB_KEY + orderId;
+        String cacheKey = LAB_KEY + orderId;
 
-        LabOrderResponse cached = cacheUtil.get(key);
+        LabOrderResponse cached = cacheUtil.get(cacheKey);
         if (cached != null) {
             log.info("Lab order redis-den oxundu, orderId={}", orderId);
             return cached;
@@ -219,7 +247,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new OrderNotFoundException("Order tapilmadi"));
 
         LabOrderResponse response = orderMapper.toLabResponse(order);
-        cacheUtil.put(key, response, 10, ChronoUnit.MINUTES);
+        cacheUtil.put(cacheKey, response, Duration.ofMinutes(10));
 
         log.info("Lab order redis-e elave olundu, orderId={}", orderId);
         return response;
@@ -267,9 +295,55 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Transactional
+        public void deleteOrder(Long orderId) {
+
+            OrderEntity order = orderRepository.findById(orderId)
+                    .orElseThrow(() ->
+                        new OrderNotFoundException("Order tapilmadi"));
+
+        orderRepository.delete(order);
+
+        cacheUtil.evict("order:receipt:" + orderId);
+        cacheUtil.evict("order:lab:" + orderId);
+    }
+
+
     private String generateOrderNumber() {
         return "ORD-" + LocalDate.now()
                 + "-" + System.currentTimeMillis();
     }
+
+    private void validateDiscount(OrderCreateRequest request) {
+
+        if (request.getDiscountPercent() != null &&
+                request.getDiscountAmount() != null) {
+
+            throw new BusinessException(
+                    "Endirim hem faiz, hem mebleg ola bilmez"
+            ) {
+            };
+        }
+
+        if (request.getDiscountPercent() != null &&
+                (request.getDiscountPercent().compareTo(BigDecimal.ZERO) < 0 ||
+                        request.getDiscountPercent().compareTo(BigDecimal.valueOf(100)) > 0)) {
+
+            throw new BusinessException(
+                    "Endirim faizi 0–100 arasi olmalidir"
+            ) {
+            };
+        }
+
+        if (request.getDiscountAmount() != null &&
+                request.getDiscountAmount().compareTo(BigDecimal.ZERO) < 0) {
+
+            throw new BusinessException(
+                    "Endirim meblegi menfi ola bilmez"
+            ) {
+            };
+        }
+    }
+
 
 }

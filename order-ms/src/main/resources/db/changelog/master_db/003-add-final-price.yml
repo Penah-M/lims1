@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-discount-and-final-price
+      author: penah
+      changes:
+        - addColumn:
+            tableName: orders
+            columns:
+              - column:
+                  name: discount_amount
+                  type: DECIMAL(12,2)
+
+              - column:
+                  name: discount_percent
+                  type: DECIMAL(5,2)
+
+              - column:
+                  name: discount_reason
+                  type: VARCHAR(255)
+
+              - column:
+                  name: final_price
+                  type: DECIMAL(12,2)
+                  defaultValue: 0.00
+                  constraints:
+                    nullable: false

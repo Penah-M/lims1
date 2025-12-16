@@ -58,6 +58,10 @@ dependencies {
 	implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
 
 
+	// redis jackson formati
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+
 	implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
 	implementation project(':common')
 

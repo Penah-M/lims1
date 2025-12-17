@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
@@ -13,7 +16,12 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class OrderTestCreateRequest {
 
-      Long testDefinitionId;
+public class OrderAddTestRequest  {
+    List<OrderTestCreateRequest> tests;
+    String notes;
+    String discountReason;
+     BigDecimal discountPercent;
+     BigDecimal discountAmount;
+
 }

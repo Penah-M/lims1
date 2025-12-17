@@ -1,5 +1,6 @@
 package com.example.order.ms.controller;
 
+import com.example.order.ms.dto.request.OrderAddTestRequest;
 import com.example.order.ms.dto.request.OrderCreateRequest;
 import com.example.order.ms.dto.response.OrderCreateResponse;
 import com.example.order.ms.dto.response.ReceiptResponse;
@@ -28,10 +29,15 @@ public class OrderReceptionController {
                 .status(HttpStatus.CREATED)
                 .body(orderService.createOrder(request));
     }
+    @PatchMapping("/{orderId}/tests")
+    public ReceiptResponse addTestsToOrder(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderAddTestRequest request
+    ) {
+        return orderService.addTestsToOrder(orderId, request);
+    }
 
-    /* =========================
-       GET RECEIPT
-       ========================= */
+
     @GetMapping("/{orderId}/receipt")
     public ResponseEntity<ReceiptResponse> getReceipt(
             @PathVariable Long orderId) {
@@ -39,9 +45,7 @@ public class OrderReceptionController {
         return ResponseEntity.ok(orderService.getReceipt(orderId));
     }
 
-    /* =========================
-       CANCEL ORDER
-       ========================= */
+
     @PostMapping("/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(
             @PathVariable Long orderId) {
@@ -51,7 +55,7 @@ public class OrderReceptionController {
     }
 
     @DeleteMapping("/{orderId}")
-    public void deleteOrder(@PathVariable Long orderId){
+    public void deleteOrder(@PathVariable Long orderId) {
         orderService.deleteOrder(orderId);
     }
 }

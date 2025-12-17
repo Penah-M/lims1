@@ -16,7 +16,7 @@ spring:
 
   liquibase:
     change-log: db/changelog/master_db.yml
-    drop-first: true
+#    drop-first: true
 
 
 redis:

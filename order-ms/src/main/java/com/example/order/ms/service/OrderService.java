@@ -1,6 +1,7 @@
 package com.example.order.ms.service;
 
 import com.example.order.ms.dto.request.LabResultUpdateRequest;
+import com.example.order.ms.dto.request.OrderAddTestRequest;
 import com.example.order.ms.dto.request.OrderCreateRequest;
 import com.example.order.ms.dto.response.LabOrderResponse;
 import com.example.order.ms.dto.response.OrderCreateResponse;
@@ -15,6 +16,10 @@ public interface OrderService {
     ReceiptResponse getReceipt(Long orderId);
 
     void cancelOrder(Long orderId);
+    ReceiptResponse  addTestsToOrder(
+            Long orderId,
+            OrderAddTestRequest request
+    ) ;
 
     /* =========================
        LAB

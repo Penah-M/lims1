@@ -70,16 +70,16 @@ public class OrderEntity {
 
 
     @Column(name = "discount_amount")
-    private BigDecimal discountAmount;
+     BigDecimal discountAmount;
 
     @Column(name = "discount_percent")
-    private BigDecimal discountPercent;
+     BigDecimal discountPercent;
 
     @Column(name = "discount_reason")
-    private String discountReason;
+     String discountReason;
 
     @Column(name = "final_price", nullable = false)
-    private BigDecimal finalPrice;
+     BigDecimal finalPrice;
 
     @Column(name = "created_by", nullable = false)
      Long createdBy;

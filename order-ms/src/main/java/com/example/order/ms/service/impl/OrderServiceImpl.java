@@ -23,6 +23,7 @@ import com.example.order.ms.exception.OrderAlreadyCanceledException;
 import com.example.order.ms.exception.OrderNotFoundException;
 import com.example.order.ms.exception.OrderTestNotFoundException;
 import com.example.order.ms.mapper.OrderMapper;
+import com.example.order.ms.mapper.PatientSnapshotMapper;
 import com.example.order.ms.service.OrderService;
 import com.example.order.ms.util.CacheUtil;
 import com.lims.common.dto.response.patient.PatientResponse;
@@ -62,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
     RangeClient rangeClient;
 
     OrderMapper orderMapper;
+    PatientSnapshotMapper patientSnapshotMapper;
 
     OrderTestCreator   testCreator;
     OrderPricingService pricingService;
@@ -74,9 +76,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderCreateResponse createOrder(OrderCreateRequest request) {
-        DiscountInfo discount = DiscountInfo.from(request);
-        pricingService.validateDiscount(discount.getPercent(), discount.getAmount());
 
+        DiscountInfo discount = DiscountInfo.from(request);
+        pricingService.validateDiscount(
+                discount.getPercent(),
+                discount.getAmount()
+        );
 
         PatientResponse patient = patientClient.findById(request.getPatientId());
         if (patient == null) {
@@ -89,36 +94,29 @@ public class OrderServiceImpl implements OrderService {
         order.setNotes(request.getNotes());
         order.setCreatedBy(5L);
 
-
-        order.setPatientId(patient.getId());
-        order.setPatientFullName(patient.getFirstName() + " " + patient.getLastName());
-        order.setPatientGender(patient.getGender());
-        order.setPatientBirthDate(patient.getBirthday());
-
+        patientSnapshotMapper.mapPatientSnapshot(order, patient);
 
         order.setDiscountPercent(discount.getPercent());
         order.setDiscountAmount(discount.getAmount());
         order.setDiscountReason(discount.getReason());
 
-
         int age = Period.between(patient.getBirthday(), LocalDate.now()).getYears();
-        BigDecimal total = addTestsInternal(
+
+        BigDecimal totalPrice = addTestsInternal(
                 order,
                 request.getTests(),
                 patient.getGender(),
                 age,
                 request.getPregnancyStatus()
         );
-
-        order.setTotalPrice(total);
+        order.setTotalPrice(totalPrice);
 
         BigDecimal finalPrice = pricingService.calculateFinalPrice(
-                total,
+                totalPrice,
                 order.getDiscountPercent(),
                 order.getDiscountAmount()
         );
         order.setFinalPrice(finalPrice);
-
 
         orderRepository.save(order);
 
@@ -132,30 +130,46 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity order = findOrder(orderId);
 
         if (order.getStatus() != OrderStatus.CREATED) {
-            throw new BusinessException("Bu status-da order-e yeni test elave etmek olmaz") {
-            };
+            throw new BusinessException(
+                    "Bu status-da order-e yeni test elave etmek olmaz"
+            ) {};
         }
 
         if (request.getNotes() != null && !request.getNotes().isBlank()) {
-
-            String old = order.getNotes() == null ? "" : order.getNotes().trim();
-            String add = request.getNotes().trim();
-            order.setNotes(old.isEmpty() ? add : (old + "\n" + add));
+            String oldNotes = order.getNotes() == null ? "" : order.getNotes().trim();
+            String newNotes = request.getNotes().trim();
+            order.setNotes(
+                    oldNotes.isEmpty() ? newNotes : oldNotes + "\n" + newNotes
+            );
         }
 
-        BigDecimal newPercent = request.getDiscountPercent() != null ? request.getDiscountPercent() : order.getDiscountPercent();
-        BigDecimal newAmount  = request.getDiscountAmount()  != null ? request.getDiscountAmount()  : order.getDiscountAmount();
-        String newReason      = request.getDiscountReason()  != null ? request.getDiscountReason()  : order.getDiscountReason();
+        BigDecimal percent =
+                request.getDiscountPercent() != null
+                        ? request.getDiscountPercent()
+                        : order.getDiscountPercent();
 
-        pricingService.validateDiscount(newPercent, newAmount);
+        BigDecimal amount =
+                request.getDiscountAmount() != null
+                        ? request.getDiscountAmount()
+                        : order.getDiscountAmount();
 
-        order.setDiscountPercent(newPercent);
-        order.setDiscountAmount(newAmount);
-        order.setDiscountReason(newReason);
+        String reason =
+                request.getDiscountReason() != null
+                        ? request.getDiscountReason()
+                        : order.getDiscountReason();
 
-        int age = Period.between(order.getPatientBirthDate(), LocalDate.now()).getYears();
+        pricingService.validateDiscount(percent, amount);
 
-        BigDecimal added = addTestsInternal(
+        order.setDiscountPercent(percent);
+        order.setDiscountAmount(amount);
+        order.setDiscountReason(reason);
+
+        int age = Period.between(
+                order.getPatientBirthDate(),
+                LocalDate.now()
+        ).getYears();
+
+        BigDecimal addedPrice = addTestsInternal(
                 order,
                 request.getTests(),
                 order.getPatientGender(),
@@ -163,7 +177,7 @@ public class OrderServiceImpl implements OrderService {
                 PregnancyStatus.NOT_PREGNANT
         );
 
-        BigDecimal newTotal = order.getTotalPrice().add(added);
+        BigDecimal newTotal = order.getTotalPrice().add(addedPrice);
         order.setTotalPrice(newTotal);
 
         BigDecimal finalPrice = pricingService.calculateFinalPrice(
@@ -172,13 +186,13 @@ public class OrderServiceImpl implements OrderService {
                 order.getDiscountAmount()
         );
         order.setFinalPrice(finalPrice);
-
         orderRepository.save(order);
         cacheUtil.evict("order:receipt:" + orderId);
         cacheUtil.evict("order:lab:" + orderId);
 
         return orderMapper.toReceiptResponse(order);
     }
+
 
     private BigDecimal addTestsInternal(
             OrderEntity order,
@@ -219,7 +233,6 @@ public class OrderServiceImpl implements OrderService {
 
         return total;
     }
-
 
     @Override
     public ReceiptResponse getReceipt(Long orderId) {
@@ -293,7 +306,7 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Lab order DB-den oxunur, orderId={}", orderId);
 
-        OrderEntity order = findOrder(orderId);;
+        OrderEntity order = findOrder(orderId);
 
         LabOrderResponse response = orderMapper.toLabResponse(order);
         cacheUtil.put(cacheKey, response, Duration.ofMinutes(10));

@@ -92,8 +92,10 @@ public class OrderEntity {
      String notes;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-     List<OrderTestEntity> tests =new ArrayList<>();
-    public void addTest(OrderTestEntity test) {
+    @Builder.Default
+    List<OrderTestEntity> tests =new ArrayList<>();
+
+        public void addTest(OrderTestEntity test) {
         tests.add(test);
         test.setOrder(this);
     }

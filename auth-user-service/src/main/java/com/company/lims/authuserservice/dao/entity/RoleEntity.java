@@ -46,6 +46,7 @@ public class RoleEntity {
     LocalDateTime updateAt;
 
     @ManyToMany(mappedBy = "roles")
+    @Builder.Default
     Set<UserEntity> users = new HashSet<>();
 
 

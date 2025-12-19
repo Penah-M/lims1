@@ -6,15 +6,15 @@ import com.example.test.analysis.ms.dao.repository.CategoryRepository;
 import com.example.test.analysis.ms.dao.repository.DefinitionRepository;
 import com.example.test.analysis.ms.dto.request.DefinitionRequest;
 import com.example.test.analysis.ms.dto.request.UpdateDefinitionRequest;
-import com.example.test.analysis.ms.dto.response.DefinitionResponse;
-import com.example.test.analysis.ms.enums.TestStatus;
-import com.example.test.analysis.ms.enums.Unit;
+import com.lims.common.enums.TestStatus;
 import com.example.test.analysis.ms.exception.AlreadyExistsException;
 import com.example.test.analysis.ms.exception.AnalysisCategoryNotFoundException;
 import com.example.test.analysis.ms.exception.DefinitionNotFoundException;
 import com.example.test.analysis.ms.exception.UnitAlreadyExistsException;
 import com.example.test.analysis.ms.mapper.DefinitionMapper;
 import com.example.test.analysis.ms.service.DefinitionService;
+import com.lims.common.dto.response.test_analysis.DefinitionResponse;
+import com.lims.common.enums.Unit;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -77,7 +78,7 @@ public class DefinitionImpl implements DefinitionService {
         return mapper.response(definitionEntity);
     }
 
-    public String changePrice(Long id, double price) {
+    public String changePrice(Long id, BigDecimal price) {
         DefinitionEntity entity = findEntity(id);
         entity.setPrice(price);
         log.info("Qiymet ugurla deyisdirildi");

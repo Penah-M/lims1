@@ -1,7 +1,7 @@
 package com.example.test.analysis.ms.dto.request;
 
-import com.example.test.analysis.ms.enums.SampleType;
-import com.example.test.analysis.ms.enums.Unit;
+import com.lims.common.enums.SampleType;
+import com.lims.common.enums.Unit;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -43,7 +45,7 @@ public class DefinitionRequest {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be positive")
-    Double price;
+    BigDecimal price;
 
     @NotNull(message = "Category ID is required")
     Long categoryId;

@@ -2,8 +2,8 @@ package com.example.patient.service.mapper;
 
 import com.example.patient.service.dao.entity.PatientEntity;
 import com.example.patient.service.dto.request.PatientRequest;
-import com.example.patient.service.dto.response.PatientResponse;
-import com.example.patient.service.enums.PatientStatus;
+import com.lims.common.dto.response.patient.PatientResponse;
+import com.lims.common.enums.PatientStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class PatientMapper {
                 .gender(request.getGender())
                 .phone(request.getPhone())
                 .birthday(request.getBirthday())
-                .documentNumber(request.getDocumentNumber())
+                .fin(request.getFin())
                 .status(PatientStatus.ACTIVE)
                 .createdAt(LocalDateTime.now())
                 .updateAt(LocalDateTime.now())
@@ -35,7 +35,7 @@ public class PatientMapper {
                 .gender(entity.getGender())
                 .phone(entity.getPhone())
                 .birthday(entity.getBirthday())
-                .documentNumber(entity.getDocumentNumber())
+                .fin(entity.getFin())
                 .status(entity.getStatus())
                 .createdAt(entity.getCreatedAt())
                 .updateAt(entity.getUpdateAt())

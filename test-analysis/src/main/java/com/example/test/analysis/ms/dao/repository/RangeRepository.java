@@ -1,8 +1,8 @@
 package com.example.test.analysis.ms.dao.repository;
 
 import com.example.test.analysis.ms.dao.entity.RangeEntity;
-import com.example.test.analysis.ms.enums.Gender;
-import com.example.test.analysis.ms.enums.PregnancyStatus;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PregnancyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,12 +34,12 @@ public interface RangeRepository extends JpaRepository<RangeEntity, Long> {
     Page<RangeEntity> findAllByTestDefinitionCodeShort(String shortCode, Pageable pageable);
 
     @Query("""
-    SELECT r FROM RangeEntity r
-    WHERE r.testDefinition.id = :definitionId
-      AND (r.gender = :gender OR r.gender = 'BOTH')
-      AND (r.pregnancyStatus = :pregnancyStatus OR r.pregnancyStatus IS NULL)
-      AND :age BETWEEN r.ageMin AND r.ageMax
-""")
+                SELECT r FROM RangeEntity r
+                WHERE r.testDefinition.id = :definitionId
+                  AND (r.gender = :gender OR r.gender = 'BOTH')
+                  AND (r.pregnancyStatus = :pregnancyStatus OR r.pregnancyStatus IS NULL)
+                  AND :age BETWEEN r.ageMin AND r.ageMax
+            """)
     List<RangeEntity> findSuitableRanges(Long definitionId,
                                          Gender gender,
                                          PregnancyStatus pregnancyStatus,

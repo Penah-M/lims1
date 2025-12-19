@@ -2,9 +2,9 @@ package com.example.test.analysis.ms.service;
 
 import com.example.test.analysis.ms.dto.request.RangeRequest;
 import com.example.test.analysis.ms.dto.request.UpdateRangeRequest;
-import com.example.test.analysis.ms.dto.response.RangeResponse;
-import com.example.test.analysis.ms.enums.Gender;
-import com.example.test.analysis.ms.enums.PregnancyStatus;
+import com.lims.common.dto.response.test_analysis.RangeResponse;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PregnancyStatus;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -22,16 +22,18 @@ public interface RangeService {
     List<RangeResponse> search(String all);
 
     RangeResponse update(Long id, UpdateRangeRequest request);
+
     String hardDelete(Long id);
 
-    RangeResponse findById (Long id);
+    RangeResponse findById(Long id);
 
     Page<RangeResponse> getAllPagination(int page, int size, String[] sort);
+
     Page<RangeResponse> getAllDefinition(Long definitionId, int page, int size, String[] sort);
 
     Page<RangeResponse> getAllByShortCode(String shortCode, int page, int size,
-                                                 String[] sort);
+                                          String[] sort);
 
     RangeResponse findBestRange(Long definitionId, Gender gender,
-                                       Integer age, PregnancyStatus pregnancyStatus);
+                                Integer age, PregnancyStatus pregnancyStatus);
 }

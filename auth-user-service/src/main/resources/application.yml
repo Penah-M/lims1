@@ -1,22 +1,43 @@
 
-spring:
-  security:
-    jwt:
-       secret-key: "dawdawdadawdawdawdawdadawdawd12312312312312"
 
+spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_user_db
     username: postgres
     password: 12345
-    driver-class-name: org.postgresql.Driver
 
   liquibase:
     change-log: db/master_db.yml
-#    drop-first: true
+ #    drop-first: true
 
+  security:
+    jwt:
+      secret-key: dev-secret
 
 server:
-  port: 8080
+  port: 8081
+
+
+
+
+#spring:
+#  security:
+#    jwt:
+#       secret-key: "dawdawdadawdawdawdawdadawdawd12312312312312"
+#
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/auth_user_db
+#    username: postgres
+#    password: 12345
+#    driver-class-name: org.postgresql.Driver
+#
+#  liquibase:
+#    change-log: db/master_db.yml
+##    drop-first: true
+#
+#
+#server:
+#  port: 8081
 
 #superadmin:
 #  username: ${SUPERADMIN_USERNAME}

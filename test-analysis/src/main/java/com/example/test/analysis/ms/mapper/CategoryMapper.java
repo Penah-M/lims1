@@ -4,7 +4,7 @@ import com.example.test.analysis.ms.dao.entity.CategoryEntity;
 import com.example.test.analysis.ms.dto.request.CategoryRequest;
 import com.example.test.analysis.ms.dto.request.UpdateCategoryRequest;
 import com.example.test.analysis.ms.dto.response.CategoryResponse;
-import com.example.test.analysis.ms.enums.TestStatus;
+import com.lims.common.enums.TestStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

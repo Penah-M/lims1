@@ -6,13 +6,13 @@ import com.example.test.analysis.ms.dao.repository.DefinitionRepository;
 import com.example.test.analysis.ms.dao.repository.RangeRepository;
 import com.example.test.analysis.ms.dto.request.RangeRequest;
 import com.example.test.analysis.ms.dto.request.UpdateRangeRequest;
-import com.example.test.analysis.ms.dto.response.RangeResponse;
-import com.example.test.analysis.ms.enums.Gender;
-import com.example.test.analysis.ms.enums.PregnancyStatus;
 import com.example.test.analysis.ms.exception.DefinitionNotFoundException;
 import com.example.test.analysis.ms.exception.RangeNotFoundException;
 import com.example.test.analysis.ms.mapper.RangeMapper;
 import com.example.test.analysis.ms.service.RangeService;
+import com.lims.common.dto.response.test_analysis.RangeResponse;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PregnancyStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -127,7 +127,7 @@ public class RangeImpl implements RangeService {
     }
 
     public RangeResponse findBestRange(Long definitionId, Gender gender,
-                                          Integer age, PregnancyStatus pregnancyStatus) {
+                                       Integer age, PregnancyStatus pregnancyStatus) {
 
         List<RangeEntity> list = rangeRepository.findSuitableRanges(definitionId, gender, pregnancyStatus, age);
 
@@ -135,7 +135,7 @@ public class RangeImpl implements RangeService {
             throw new RangeNotFoundException("Bu xəstə məlumatlarına uyğun range tapılmadı");
         }
 
-        // Normalda yalnız 1 dənə uyğun range olur
+
         return rangeMapper.response(list.get(0));
     }
 
@@ -167,7 +167,7 @@ public class RangeImpl implements RangeService {
     }
 
     private Pageable pageable(int page, int size, String[] sort) {
-        String sortField = "id";  // default
+        String sortField = "id";
         String sortDirection = "asc";
 
         if (sort != null && sort.length > 0) {

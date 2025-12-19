@@ -3,8 +3,8 @@ package com.example.test.analysis.ms.mapper;
 import com.example.test.analysis.ms.dao.entity.DefinitionEntity;
 import com.example.test.analysis.ms.dto.request.DefinitionRequest;
 import com.example.test.analysis.ms.dto.request.UpdateDefinitionRequest;
-import com.example.test.analysis.ms.dto.response.DefinitionResponse;
-import com.example.test.analysis.ms.enums.TestStatus;
+import com.lims.common.enums.TestStatus;
+import com.lims.common.dto.response.test_analysis.DefinitionResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

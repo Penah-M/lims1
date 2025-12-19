@@ -2,10 +2,10 @@ package com.example.test.analysis.ms.controller;
 
 import com.example.test.analysis.ms.dto.request.DefinitionRequest;
 import com.example.test.analysis.ms.dto.request.UpdateDefinitionRequest;
-import com.example.test.analysis.ms.dto.response.DefinitionResponse;
-import com.example.test.analysis.ms.enums.TestStatus;
-import com.example.test.analysis.ms.enums.Unit;
+import com.lims.common.enums.TestStatus;
 import com.example.test.analysis.ms.service.DefinitionService;
+import com.lims.common.dto.response.test_analysis.DefinitionResponse;
+import com.lims.common.enums.Unit;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -47,7 +48,7 @@ public class DefinitionController {
 
     @PutMapping("/{id},price/{price}")
     public String changePrice(@PathVariable Long id,
-                              @PathVariable double price) {
+                              @PathVariable BigDecimal price) {
         return definitionService.changePrice(id, price);
     }
 

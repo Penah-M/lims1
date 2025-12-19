@@ -1,6 +1,6 @@
 package com.example.test.analysis.ms.dto.response;
 
-import com.example.test.analysis.ms.enums.TestStatus;
+import com.lims.common.enums.TestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

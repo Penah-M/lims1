@@ -1,6 +1,6 @@
 package com.example.test.analysis.ms.dao.entity;
 
-import com.example.test.analysis.ms.enums.TestStatus;
+import com.lims.common.enums.TestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

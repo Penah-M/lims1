@@ -1,8 +1,8 @@
 package com.example.test.analysis.ms.dao.entity;
 
-import com.example.test.analysis.ms.enums.Gender;
-import com.example.test.analysis.ms.enums.PregnancyStatus;
-import com.example.test.analysis.ms.enums.Unit;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PregnancyStatus;
+import com.lims.common.enums.Unit;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

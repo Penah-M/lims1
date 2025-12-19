@@ -1,8 +1,9 @@
 package com.example.test.analysis.ms.dao.entity;
 
-import com.example.test.analysis.ms.enums.SampleType;
-import com.example.test.analysis.ms.enums.TestStatus;
-import com.example.test.analysis.ms.enums.Unit;
+
+import com.lims.common.enums.SampleType;
+import com.lims.common.enums.TestStatus;
+import com.lims.common.enums.Unit;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -42,7 +44,7 @@ public class DefinitionEntity {
 
     Integer tat;
 
-    Double price;
+    BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     TestStatus status;

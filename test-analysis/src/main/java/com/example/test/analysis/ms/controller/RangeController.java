@@ -2,10 +2,10 @@ package com.example.test.analysis.ms.controller;
 
 import com.example.test.analysis.ms.dto.request.RangeRequest;
 import com.example.test.analysis.ms.dto.request.UpdateRangeRequest;
-import com.example.test.analysis.ms.dto.response.RangeResponse;
-import com.example.test.analysis.ms.enums.Gender;
-import com.example.test.analysis.ms.enums.PregnancyStatus;
 import com.example.test.analysis.ms.service.RangeService;
+import com.lims.common.dto.response.test_analysis.RangeResponse;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PregnancyStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;

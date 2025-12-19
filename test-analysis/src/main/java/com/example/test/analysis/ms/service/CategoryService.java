@@ -3,7 +3,7 @@ package com.example.test.analysis.ms.service;
 import com.example.test.analysis.ms.dto.request.CategoryRequest;
 import com.example.test.analysis.ms.dto.request.UpdateCategoryRequest;
 import com.example.test.analysis.ms.dto.response.CategoryResponse;
-import com.example.test.analysis.ms.enums.TestStatus;
+import com.lims.common.enums.TestStatus;
 
 import java.util.List;
 

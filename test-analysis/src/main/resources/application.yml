@@ -1,20 +1,16 @@
 spring:
+  application:
+    name: test-analysis
+
   datasource:
     url: jdbc:postgresql://localhost:5432/test_analysis_db
     username: postgres
     password: 12345
     driver-class-name: org.postgresql.Driver
-  application:
-    name: test-analysis
-
 
   liquibase:
     change-log: db/changelog/master_db.yml
-#    drop-first: true
+    # drop-first: true
 
 server:
   port: 8083
-
-
-
-

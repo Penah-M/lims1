@@ -2,11 +2,12 @@ package com.example.test.analysis.ms.service;
 
 import com.example.test.analysis.ms.dto.request.DefinitionRequest;
 import com.example.test.analysis.ms.dto.request.UpdateDefinitionRequest;
-import com.example.test.analysis.ms.dto.response.DefinitionResponse;
-import com.example.test.analysis.ms.enums.TestStatus;
-import com.example.test.analysis.ms.enums.Unit;
+import com.lims.common.enums.TestStatus;
+import com.lims.common.dto.response.test_analysis.DefinitionResponse;
+import com.lims.common.enums.Unit;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface DefinitionService {
@@ -14,7 +15,7 @@ public interface DefinitionService {
 
     DefinitionResponse update(Long id, UpdateDefinitionRequest request);
 
-    String changePrice(Long id, double price);
+    String changePrice(Long id, BigDecimal price);
 
     String changeUnit(Long id, Unit unit);
 
@@ -34,7 +35,7 @@ public interface DefinitionService {
                                               int size,
                                               String[] sort,
                                               TestStatus status,
-                                              Long categoryId, // categoryId ilə filtr
+                                              Long categoryId,
                                               String categoryCode);
 
     void softDelete(Long id);

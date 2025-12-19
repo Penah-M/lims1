@@ -5,7 +5,7 @@ import com.example.test.analysis.ms.dao.entity.RangeEntity;
 import com.example.test.analysis.ms.dto.request.RangeRequest;
 
 import com.example.test.analysis.ms.dto.request.UpdateRangeRequest;
-import com.example.test.analysis.ms.dto.response.RangeResponse;
+import com.lims.common.dto.response.test_analysis.RangeResponse;
 import org.springframework.stereotype.Component;
 
 

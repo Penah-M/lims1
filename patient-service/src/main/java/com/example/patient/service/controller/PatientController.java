@@ -1,10 +1,10 @@
 package com.example.patient.service.controller;
 
 import com.example.patient.service.dto.request.PatientRequest;
-import com.example.patient.service.dto.response.PatientResponse;
-import com.example.patient.service.enums.Gender;
-import com.example.patient.service.enums.PatientStatus;
 import com.example.patient.service.service.PatientService;
+import com.lims.common.dto.response.patient.PatientResponse;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PatientStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +31,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class PatientController {
     PatientService patientService;
-//    private final Servlet servlet;
+
 
 
     @PostMapping("create")

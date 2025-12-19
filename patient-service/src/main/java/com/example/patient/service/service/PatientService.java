@@ -1,9 +1,10 @@
 package com.example.patient.service.service;
 
 import com.example.patient.service.dto.request.PatientRequest;
-import com.example.patient.service.dto.response.PatientResponse;
-import com.example.patient.service.enums.Gender;
-import com.example.patient.service.enums.PatientStatus;
+
+import com.lims.common.dto.response.patient.PatientResponse;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PatientStatus;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;

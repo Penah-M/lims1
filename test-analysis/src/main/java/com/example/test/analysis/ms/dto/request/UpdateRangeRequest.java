@@ -1,9 +1,9 @@
 package com.example.test.analysis.ms.dto.request;
 
-import com.example.test.analysis.ms.enums.Gender;
-import com.example.test.analysis.ms.enums.PregnancyStatus;
-import com.example.test.analysis.ms.enums.TestStatus;
-import com.example.test.analysis.ms.enums.Unit;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PregnancyStatus;
+import com.lims.common.enums.TestStatus;
+import com.lims.common.enums.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

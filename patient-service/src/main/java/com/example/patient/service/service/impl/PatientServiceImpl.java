@@ -3,13 +3,13 @@ package com.example.patient.service.service.impl;
 import com.example.patient.service.dao.entity.PatientEntity;
 import com.example.patient.service.dao.reposirtory.PatientRepository;
 import com.example.patient.service.dto.request.PatientRequest;
-import com.example.patient.service.dto.response.PatientResponse;
-import com.example.patient.service.enums.Gender;
-import com.example.patient.service.enums.PatientStatus;
 import com.example.patient.service.exception.DuplicateException;
 import com.example.patient.service.exception.PatientNotFoundException;
 import com.example.patient.service.mapper.PatientMapper;
 import com.example.patient.service.service.PatientService;
+import com.lims.common.dto.response.patient.PatientResponse;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PatientStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.patient.service.enums.PatientStatus.ACTIVE;
-import static com.example.patient.service.enums.PatientStatus.DELETE;
 import static java.time.LocalTime.MAX;
 
 @Slf4j
@@ -39,7 +37,7 @@ public class PatientServiceImpl implements PatientService {
 //    private final MapperBuilder mapperBuilder;
 
     public PatientResponse createPatient(PatientRequest request) {
-        if (patientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
+        if (patientRepository.existsByFin(request.getFin())) {
             throw new DuplicateException("Bu FIN artıq qeydiyyatdan keçib");
         }
 //        PatientStatus status = PatientStatus.ACTIVE;
@@ -113,8 +111,8 @@ public class PatientServiceImpl implements PatientService {
             log.warn("Qeyd olunan {} ID li patient tapilmadi", id);
             return new PatientNotFoundException("Qeyd olunan patient tapilmadi");
         });
-        if (entity.getStatus() != DELETE) {
-            entity.setStatus(DELETE);
+        if (entity.getStatus() != com.lims.common.enums.PatientStatus.DELETE) {
+            entity.setStatus(com.lims.common.enums.PatientStatus.DELETE);
             log.info("Qeyd olunan patient-in statusu DELETE oldu");
             patientRepository.save(entity);
             return "Qeyd olunan PATIENT-in statusu delete oldu";
@@ -130,8 +128,8 @@ public class PatientServiceImpl implements PatientService {
             log.warn("Qeyd olunan {} ID li patient tapilmadi..", id);
             return new PatientNotFoundException("Qeyd olunan patient tapilmadi");
         });
-        if(entity.getStatus()== DELETE){
-            entity.setStatus(ACTIVE);
+        if(entity.getStatus()== com.lims.common.enums.PatientStatus.DELETE){
+            entity.setStatus(com.lims.common.enums.PatientStatus.ACTIVE);
             log.info("Qeyd etdyiniz PATIENT-in statusu deyisdirildi");
             patientRepository.save(entity);
             return "Qeyd etdyiniz PATIENT-in statusu deyisdirildi";
@@ -261,8 +259,7 @@ public class PatientServiceImpl implements PatientService {
 
     public PatientResponse findByFin(String fin) {
 
-
-        PatientEntity entity = patientRepository.findByDocumentNumberIgnoreCase(fin).orElseThrow(() -> {
+        PatientEntity entity = patientRepository.findByFinIgnoreCase(fin).orElseThrow(() -> {
             log.warn(" Qeyd olunan: {}  Fine malik istifadeci tapilmad", fin);
             return new PatientNotFoundException("Qeyd etdiyiniz fine aid istifadeic tapilmadi");
         });

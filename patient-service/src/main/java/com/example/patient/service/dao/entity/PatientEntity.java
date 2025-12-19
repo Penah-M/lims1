@@ -1,8 +1,8 @@
 package com.example.patient.service.dao.entity;
 
 
-import com.example.patient.service.enums.Gender;
-import com.example.patient.service.enums.PatientStatus;
+import com.lims.common.enums.Gender;
+import com.lims.common.enums.PatientStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +43,7 @@ public class PatientEntity {
     String phone;
     LocalDate birthday;
 
-    String documentNumber;
+    String fin;
 
     @Enumerated(EnumType.STRING)
     PatientStatus status;

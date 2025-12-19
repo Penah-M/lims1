@@ -12,7 +12,14 @@ public enum PregnancyStatus {
     UNKNOWN;
 
     @JsonCreator
-    public static PregnancyStatus from(String value) {
-        return PregnancyStatus.valueOf(value.toUpperCase());
+    public static PregnancyStatus fromString(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            return PregnancyStatus.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

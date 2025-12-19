@@ -2,8 +2,7 @@ package com.lims.common.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public enum
-TestStatus {
+public enum TestStatus {
     ACTIVE,
     INACTIVE,
     DELETE,

@@ -369,7 +369,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private String generateOrderNumber() {
-        return "ORD-" + LocalDate.now()
+        return "ORD-" + LocalDate.now().getYear()
                 + "-" + System.currentTimeMillis();
     }
 

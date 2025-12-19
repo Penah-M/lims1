@@ -8,8 +8,15 @@ public enum Gender {
     BOTH;
 
     @JsonCreator
-    public static Gender from(String value) {
-        return Gender.valueOf(value.toUpperCase());
+    public static Gender fromString(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            return Gender.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
 

@@ -23,6 +23,19 @@
     <bytecodeTargetLevel target="21" />
   </component>
   <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="lims.auth-user-service" options="-parameters" />
+      <module name="lims.auth-user-service.main" options="-parameters" />
+      <module name="lims.auth-user-service.test" options="-parameters" />
+      <module name="lims.order-ms" options="-parameters" />
+      <module name="lims.order-ms.main" options="-parameters" />
+      <module name="lims.order-ms.test" options="-parameters" />
+      <module name="lims.patient-service" options="-parameters" />
+      <module name="lims.patient-service.main" options="-parameters" />
+      <module name="lims.patient-service.test" options="-parameters" />
+      <module name="lims.test-analysis" options="-parameters" />
+      <module name="lims.test-analysis.main" options="-parameters" />
+      <module name="lims.test-analysis.test" options="-parameters" />
+    </option>
   </component>
 </project>

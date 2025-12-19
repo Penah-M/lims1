@@ -33,7 +33,7 @@ public class PatientResponse {
 
     LocalDate birthday;
 
-    String documentNumber;
+    String fin;
 
     PatientStatus status;
 

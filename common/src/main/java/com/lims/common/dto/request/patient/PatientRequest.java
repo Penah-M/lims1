@@ -1,11 +1,7 @@
 package com.lims.common.dto.request.patient;
 
 import com.lims.common.enums.Gender;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +15,6 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-//@Builder
-
 public class PatientRequest {
     @NotBlank
     @Size(min = 2, max = 50)
@@ -39,16 +33,22 @@ public class PatientRequest {
     @PastOrPresent(message = "Dogum tarixi bugunki gun ve kecmiste olmalidir")
     LocalDate birthday;
 
-    @Pattern(regexp = "^\\+994(10|50|51|55|60|70|77|99)[0-9]{6}$",
-            message = "Telefon nomresi duzgun deyil")
+
+    @Pattern(
+            regexp = "^\\+994(10|50|51|55|60|70|77|99)[0-9]{7}$",
+            message = "Telefon nomresi duzgun deyil. Meselen: +994501234567"
+    )
     String phone;
 
 
 
     @NotBlank(message = "FIN bos ola bilmez")
-    @Size(min = 7, max = 7, message = "FIN-in uzunlugu 7 olmalidir")
-    @Pattern(regexp = "^[A-Z0-9]{7}$", message = "FIN-de ancaq bu simvollar ola biler A-Z and 0-9")
-    private String documentNumber;
+    @Size(min = 7, max = 7, message = "FIN-in uzunlugu 7 simvol olmalidir")
+    @Pattern(
+            regexp = "^[A-Z0-9]{7}$",
+            message = "FIN yalniz boyuk herfler (A-Z) ve reqemlerden (0-9) ibaret ola biler"
+    )
+    String fin;
 
 
 }

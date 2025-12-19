@@ -1,44 +1,31 @@
 spring:
+  application:
+    name: order-ms
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
   datasource:
     url: jdbc:postgresql://localhost:5432/order_db
     username: postgres
     password: 12345
     driver-class-name: org.postgresql.Driver
 
-  application:
-    name: order-ms
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   liquibase:
     change-log: db/changelog/master_db.yml
-#    drop-first: true
-
-
-redis:
-  server:
-    url: redis://localhost:6379
-
+    # drop-first: true
 
   jpa:
     hibernate:
       ddl-auto: validate
 
-
-
-
-
-
-#  jpa:
-#    hibernate:
-#      ddl-auto: none
-#    show-sql: true
-#    properties:
-#      hibernate.format_sql: true
+redis:
+  server:
+    url: redis://localhost:6379
 
 server:
   port: 8084

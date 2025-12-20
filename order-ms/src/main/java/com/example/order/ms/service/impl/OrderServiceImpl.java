@@ -14,6 +14,7 @@ import com.example.order.ms.dto.request.LabResultUpdateRequest;
 import com.example.order.ms.dto.request.OrderAddTestRequest;
 import com.example.order.ms.dto.request.OrderCreateRequest;
 import com.example.order.ms.dto.request.OrderTestCreateRequest;
+import com.example.order.ms.dto.request.RemoveOrderTestsRequest;
 import com.example.order.ms.dto.response.LabOrderResponse;
 import com.example.order.ms.dto.response.OrderCreateResponse;
 import com.example.order.ms.dto.response.ReceiptResponse;
@@ -45,7 +46,10 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -123,17 +127,19 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toCreateResponse(order);
     }
 
-
     @Override
     @Transactional
     public ReceiptResponse addTestsToOrder(Long orderId, OrderAddTestRequest request) {
+
         OrderEntity order = findOrder(orderId);
 
         if (order.getStatus() != OrderStatus.CREATED) {
             throw new BusinessException(
                     "Bu status-da order-e yeni test elave etmek olmaz"
-            ) {};
+            ) {
+            };
         }
+
 
         if (request.getNotes() != null && !request.getNotes().isBlank()) {
             String oldNotes = order.getNotes() == null ? "" : order.getNotes().trim();
@@ -143,26 +149,21 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
-        BigDecimal percent =
-                request.getDiscountPercent() != null
-                        ? request.getDiscountPercent()
-                        : order.getDiscountPercent();
+        boolean discountProvided =
+                request.getDiscountPercent() != null ||
+                        request.getDiscountAmount() != null;
 
-        BigDecimal amount =
-                request.getDiscountAmount() != null
-                        ? request.getDiscountAmount()
-                        : order.getDiscountAmount();
+        if (discountProvided) {
 
-        String reason =
-                request.getDiscountReason() != null
-                        ? request.getDiscountReason()
-                        : order.getDiscountReason();
+            pricingService.validateDiscount(
+                    request.getDiscountPercent(),
+                    request.getDiscountAmount()
+            );
 
-        pricingService.validateDiscount(percent, amount);
-
-        order.setDiscountPercent(percent);
-        order.setDiscountAmount(amount);
-        order.setDiscountReason(reason);
+            order.setDiscountPercent(request.getDiscountPercent());
+            order.setDiscountAmount(request.getDiscountAmount());
+            order.setDiscountReason(request.getDiscountReason());
+        }
 
         int age = Period.between(
                 order.getPatientBirthDate(),
@@ -177,6 +178,7 @@ public class OrderServiceImpl implements OrderService {
                 PregnancyStatus.NOT_PREGNANT
         );
 
+
         BigDecimal newTotal = order.getTotalPrice().add(addedPrice);
         order.setTotalPrice(newTotal);
 
@@ -186,12 +188,15 @@ public class OrderServiceImpl implements OrderService {
                 order.getDiscountAmount()
         );
         order.setFinalPrice(finalPrice);
+
         orderRepository.save(order);
+
         cacheUtil.evict("order:receipt:" + orderId);
         cacheUtil.evict("order:lab:" + orderId);
 
         return orderMapper.toReceiptResponse(order);
     }
+
 
 
     private BigDecimal addTestsInternal(
@@ -353,6 +358,88 @@ public class OrderServiceImpl implements OrderService {
             // TODO [AUDIT-MS]: OrderCompletedEvent
         }
     }
+
+    @Override
+    @Transactional
+    public ReceiptResponse removeTestsFromOrder(
+            Long orderId,
+            RemoveOrderTestsRequest request
+    ) {
+
+        if (request.getOrderTestIds() == null || request.getOrderTestIds().isEmpty()) {
+            throw new BusinessException("Silinecek test id-leri bos ola bilmez") {
+            };
+        }
+
+        OrderEntity order = findOrder(orderId);
+
+        if (order.getStatus() != OrderStatus.CREATED) {
+            throw new BusinessException(
+                    "Bu status-da order-den test silmek olmaz"
+            ) {
+            };
+        }
+
+        List<OrderTestEntity> tests = order.getTests();
+
+        if (tests == null || tests.isEmpty()) {
+            throw new BusinessException("Order-in testleri yoxdur") {
+            };
+        }
+
+
+        BigDecimal removedTotal = BigDecimal.ZERO;
+
+        Iterator<OrderTestEntity> iterator = tests.iterator();
+        Set<Long> idsToRemove = new HashSet<>(request.getOrderTestIds());
+
+        boolean removedAny = false;
+
+        while (iterator.hasNext()) {
+            OrderTestEntity test = iterator.next();
+
+            if (idsToRemove.contains(test.getId())) {
+                removedTotal = removedTotal.add(test.getPrice());
+                iterator.remove();
+                removedAny = true;
+            }
+        }
+
+        if (!removedAny) {
+            throw new BusinessException(
+                    "Gonderilen test id-leri bu order-e aid deyil"
+            ) {
+            };
+        }
+
+        BigDecimal newTotal =
+                order.getTotalPrice().subtract(removedTotal);
+
+        if (newTotal.compareTo(BigDecimal.ZERO) < 0) {
+            newTotal = BigDecimal.ZERO;
+        }
+
+        order.setTotalPrice(newTotal);
+
+        //qiymet deyisikliyi
+        BigDecimal finalPrice =
+                pricingService.calculateFinalPrice(
+                        newTotal,
+                        order.getDiscountPercent(),
+                        order.getDiscountAmount()
+                );
+
+        order.setFinalPrice(finalPrice);
+
+        orderRepository.save(order);
+
+        cacheUtil.evict("order:receipt:" + orderId);
+        cacheUtil.evict("order:lab:" + orderId);
+
+        return orderMapper.toReceiptResponse(order);
+    }
+
+
 
     @Transactional
     public void deleteOrder(Long orderId) {

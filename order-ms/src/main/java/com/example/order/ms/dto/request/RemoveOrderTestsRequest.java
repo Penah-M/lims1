@@ -1,4 +1,5 @@
-package com.example.order.ms.dto.response;
+package com.example.order.ms.dto.request;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -15,9 +16,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class ReceiptItemResponse {
+public class RemoveOrderTestsRequest {
 
-     String testName;
-     BigDecimal price;
-     Long orderTestId;
+    List<Long> orderTestIds;
 }

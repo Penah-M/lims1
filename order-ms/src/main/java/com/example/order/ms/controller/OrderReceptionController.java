@@ -2,6 +2,7 @@ package com.example.order.ms.controller;
 
 import com.example.order.ms.dto.request.OrderAddTestRequest;
 import com.example.order.ms.dto.request.OrderCreateRequest;
+import com.example.order.ms.dto.request.RemoveOrderTestsRequest;
 import com.example.order.ms.dto.response.OrderCreateResponse;
 import com.example.order.ms.dto.response.ReceiptResponse;
 import com.example.order.ms.service.OrderService;
@@ -57,5 +58,12 @@ public class OrderReceptionController {
     @DeleteMapping("/{orderId}")
     public void deleteOrder(@PathVariable Long orderId) {
         orderService.deleteOrder(orderId);
+    }
+    @DeleteMapping("/{orderId}/tests")
+    public ReceiptResponse removeTestsFromOrder(
+            @PathVariable Long orderId,
+            @Valid @RequestBody RemoveOrderTestsRequest request
+    ) {
+        return orderService.removeTestsFromOrder(orderId, request);
     }
 }

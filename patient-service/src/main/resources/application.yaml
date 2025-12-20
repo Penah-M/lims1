@@ -15,7 +15,6 @@ spring:
     change-log: db/changelog/master_db.yml
 #    drop-first: true
 
-
 #eureka:
 #  client:
 #    serviceUrl:

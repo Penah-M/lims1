@@ -46,6 +46,7 @@ public class OrderMapper {
                 ReceiptItemResponse item = ReceiptItemResponse.builder()
                         .testName(test.getTestName())
                         .price(test.getPrice())
+                        .orderTestId(test.getId())
                         .build();
 
                 items.add(item);

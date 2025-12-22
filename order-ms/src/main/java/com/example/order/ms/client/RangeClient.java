@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         name = "test-analysis",
         contextId = "rangeClient",
-        url = "localhost:8083/api/v1/range"
+        url = "${test.service.url}"
 )
 public interface RangeClient {
-    @GetMapping("/findBestRange")
+    @GetMapping("/range/findBestRange")
      RangeResponse findBestRange(
             @RequestParam Long definitionId,
             @RequestParam Gender gender,

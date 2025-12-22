@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
         name = "test-analysis",
         contextId = "definitionClient",
-        url = "localhost:8083/api/v1/definition")
+        url = "${test.service.url}")
 public interface DefinitionClient {
 
-    @GetMapping("/{id}/find")
+    @GetMapping("/definition/{id}/find")
     DefinitionResponse findId(@PathVariable Long id);
 }

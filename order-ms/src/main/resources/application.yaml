@@ -31,3 +31,22 @@ server:
   port: 8084
 
 
+patient:
+  service:
+    url: http://localhost:8082/api/v1
+
+
+test:
+  service:
+    url: http://localhost:8083/api/v1
+
+
+#  evdeki tailscale serverim ucun
+#patient:
+#  service:
+#    url: http://100.99.238.19:8082/api/v1
+#test:
+#  service:
+#    url: http://100.99.238.19:8083/api/v1
+
+

@@ -1,5 +1,15 @@
-# Project exclude paths
-/.gradle/
-/build/
-/common/build/
-/common/build/classes/java/main/
+
+.gradle/
+**/build/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+*.log
+
+# Node / Frontend (gelecek ucun)
+node_modules/
+
+.env
+.env.*
